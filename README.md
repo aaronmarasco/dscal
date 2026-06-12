@@ -8,6 +8,18 @@ an `.ics` file you can import into Google Calendar.
 
 ## Usage
 
+Install it with `uv`:
+
+```
+uv add "git+https://github.com/aaronmarasco/dscal.git"
+```
+
+Or run it without adding it to a project:
+
+```
+uvx --from "git+https://github.com/aaronmarasco/dscal.git" dscal --help
+```
+
 Register the course websites you're taking:
 
 ```
