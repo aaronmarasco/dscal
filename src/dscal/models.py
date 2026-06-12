@@ -24,9 +24,7 @@ class Kind(Enum):
         return self in _DEADLINE_KINDS
 
 
-_DEADLINE_KINDS = frozenset(
-    {Kind.LAB, Kind.PROJECT, Kind.HOMEWORK, Kind.EXAM}
-)
+_DEADLINE_KINDS = frozenset({Kind.LAB, Kind.PROJECT, Kind.HOMEWORK, Kind.EXAM})
 
 
 @dataclass(frozen=True, order=True)
@@ -41,9 +39,7 @@ class Event:
     url: str | None = None
 
 
-def events_in_window(
-    events: list[Event], start: date, days: int = 7
-) -> list[Event]:
+def events_in_window(events: list[Event], start: date, days: int = 7) -> list[Event]:
     """Events with start <= event.date < start + days, sorted by date."""
     end = start + timedelta(days=days)
     return sorted(e for e in events if start <= e.date < end)

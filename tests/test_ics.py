@@ -30,14 +30,20 @@ def test_all_day_event() -> None:
 
 def test_summary_escaped() -> None:
     text = to_ics([make_event()])
-    assert "DSC 80: PROJ 1 \\u2013 Project 1\\; with\\, special chars".replace("\\u2013", "-") in text or "Project 1\\; with\\, special chars" in text
+    assert (
+        "DSC 80: PROJ 1 \\u2013 Project 1\\; with\\, special chars".replace(
+            "\\u2013", "-"
+        )
+        in text
+        or "Project 1\\; with\\, special chars" in text
+    )
 
 
 def test_deterministic_uid() -> None:
     a = to_ics([make_event()])
     b = to_ics([make_event()])
-    uid_a = [l for l in a.splitlines() if l.startswith("UID:")]
-    assert uid_a and uid_a == [l for l in b.splitlines() if l.startswith("UID:")]
+    uid_a = [ln for ln in a.splitlines() if ln.startswith("UID:")]
+    assert uid_a and uid_a == [ln for ln in b.splitlines() if ln.startswith("UID:")]
 
 
 def test_crlf_line_endings() -> None:

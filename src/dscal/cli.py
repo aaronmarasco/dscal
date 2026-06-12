@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import argparse
 import sys
-from datetime import date, timedelta
+from datetime import date
 from pathlib import Path
 
 from rich.console import Console
@@ -93,9 +93,7 @@ def cmd_week(args: argparse.Namespace) -> None:
     today = date.today()
     window = events_in_window(events, start=today, days=args.days)
     if not window:
-        console.print(
-            f"[green]Nothing due in the next {args.days} days. :tada:[/]"
-        )
+        console.print(f"[green]Nothing due in the next {args.days} days. :tada:[/]")
         return
     table = Table(
         title=f"Due in the next {args.days} days",
@@ -109,9 +107,7 @@ def cmd_week(args: argparse.Namespace) -> None:
     table.add_column("Link", overflow="fold")
     for e in window:
         delta = (e.date - today).days
-        when = {0: "TODAY", 1: "tomorrow"}.get(
-            delta, e.date.strftime("%a %b %d")
-        )
+        when = {0: "TODAY", 1: "tomorrow"}.get(delta, e.date.strftime("%a %b %d"))
         style = "bold red" if delta <= 1 else KIND_STYLES.get(e.kind, "")
         table.add_row(
             f"[{style}]{when}[/]" if style else when,
@@ -162,16 +158,12 @@ def main() -> None:
     p_ls = sub.add_parser("list", help="show configured courses")
     p_ls.set_defaults(func=cmd_list)
 
-    p_week = sub.add_parser(
-        "week", help="what's due soon, across all courses"
-    )
+    p_week = sub.add_parser("week", help="what's due soon, across all courses")
     p_week.add_argument("--days", type=int, default=7)
     p_week.add_argument(
         "--all", action="store_true", help="include lectures/discussions"
     )
-    p_week.add_argument(
-        "--refresh", action="store_true", help="ignore the cache"
-    )
+    p_week.add_argument("--refresh", action="store_true", help="ignore the cache")
     p_week.set_defaults(func=cmd_week)
 
     p_exp = sub.add_parser(
@@ -181,9 +173,7 @@ def main() -> None:
     p_exp.add_argument(
         "--all", action="store_true", help="include lectures/discussions"
     )
-    p_exp.add_argument(
-        "--refresh", action="store_true", help="ignore the cache"
-    )
+    p_exp.add_argument("--refresh", action="store_true", help="ignore the cache")
     p_exp.set_defaults(func=cmd_export)
 
     args = parser.parse_args()

@@ -123,11 +123,7 @@ def parse_just_the_class(html: str, course: str, year: int) -> list[Event]:
             label_el = child.select_one(".module-event-type .label")
             title_el = child.select_one(".module-event-content--title")
             label = label_el.get_text(strip=True) if label_el else ""
-            title = (
-                " ".join(title_el.get_text(strip=True).split())
-                if title_el
-                else ""
-            )
+            title = " ".join(title_el.get_text(strip=True).split()) if title_el else ""
             if not label and not title:
                 continue
             classes = label_el.get("class") if label_el else None

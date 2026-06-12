@@ -21,13 +21,21 @@ QUARTER_MONTHS: dict[str, tuple[int, int]] = {
     "fall": (9, 12),
 }
 
-_QUARTER_RE = re.compile(
-    r"\b(winter|spring|summer|fall)\b[\s,]*(\d{4})", re.IGNORECASE
-)
+_QUARTER_RE = re.compile(r"\b(winter|spring|summer|fall)\b[\s,]*(\d{4})", re.IGNORECASE)
 
 _MONTHS = {
-    "jan": 1, "feb": 2, "mar": 3, "apr": 4, "may": 5, "jun": 6,
-    "jul": 7, "aug": 8, "sep": 9, "oct": 10, "nov": 11, "dec": 12,
+    "jan": 1,
+    "feb": 2,
+    "mar": 3,
+    "apr": 4,
+    "may": 5,
+    "jun": 6,
+    "jul": 7,
+    "aug": 8,
+    "sep": 9,
+    "oct": 10,
+    "nov": 11,
+    "dec": 12,
 }
 
 _DAY_LABEL_RE = re.compile(

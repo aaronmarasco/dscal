@@ -12,7 +12,7 @@ from __future__ import annotations
 import os
 
 try:  # tomllib is stdlib from 3.11; tomli is the identical backport
-    import tomllib
+    import tomllib  # type: ignore[import-not-found]
 except ModuleNotFoundError:  # pragma: no cover
     import tomli as tomllib  # type: ignore[no-redef]
 from dataclasses import dataclass

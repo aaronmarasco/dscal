@@ -37,9 +37,7 @@ def fetch(url_or_path: str, *, key: str, refresh: bool = False) -> str:
             return cached.read_text(encoding="utf-8")
 
     try:
-        resp = requests.get(
-            url_or_path, headers={"User-Agent": USER_AGENT}, timeout=15
-        )
+        resp = requests.get(url_or_path, headers={"User-Agent": USER_AGENT}, timeout=15)
         resp.raise_for_status()
     except requests.RequestException:
         if cached.exists():
