@@ -1,0 +1,29 @@
+[project]
+name = "dscal"
+version = "0.1.0"
+description = "Aggregate deadlines from DSC course websites: weekly checkups and Google Calendar export"
+readme = "README.md"
+authors = [
+    { name = "Aaron Amarasco", email = "aaronamarasco@gmail.com" }
+]
+requires-python = ">=3.10"
+dependencies = [
+    "requests>=2.31",
+    "beautifulsoup4>=4.12",
+    "rich>=13.0",
+]
+
+[project.scripts]
+dscal = "dscal.cli:main"
+
+[dependency-groups]
+dev = [
+    "pytest>=8.0",
+    "mypy>=1.8",
+    "ruff>=0.4",
+    "types-requests",
+]
+
+[build-system]
+requires = ["uv_build>=0.11.19,<0.12.0"]
+build-backend = "uv_build"
