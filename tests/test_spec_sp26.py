@@ -106,6 +106,10 @@ DSC152 = [
 ]
 
 CASES = [
+    # dsc80_live.html is the REAL page as fetched from dsc80.com
+    # (captured 2026-06-11); the *_real.html fixtures are rendered from
+    # each course repo's actual schedule data.
+    ("dsc80_live.html", "DSC 80", DSC80),
     ("dsc80_real.html", "DSC 80", DSC80),
     ("dsc106_real.html", "DSC 106", DSC106),
     ("dsc10_real.html", "DSC 10", DSC10),
@@ -132,4 +136,4 @@ def test_exact_spec_match(
 
 def test_total_count() -> None:
     total = sum(len(deadlines(f, c)) for f, c, _ in CASES)
-    assert total == 78
+    assert total == 98  # 78 unique + DSC 80 counted twice (live + rendered)

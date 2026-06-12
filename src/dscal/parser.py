@@ -99,7 +99,13 @@ def parse_just_the_class(soup: BeautifulSoup, course: str, year: int) -> list[Ev
                 continue
             classes = [str(c) for c in (el.get("class") or [])]
             if el.name == "dt" and "module-day" in classes:
-                current = parse_day_label(el.get_text(strip=True), year)
+                # Real pages leave <dt> unclosed, so the parsed tree nests
+                # the whole day's events inside it. Only the dt's DIRECT
+                # text is the date label.
+                direct = "".join(
+                    str(t) for t in el.find_all(string=True, recursive=False)
+                )
+                current = parse_day_label(direct.strip(), year)
             elif el.name == "strong" and "label" in classes:
                 if current is None:
                     continue
