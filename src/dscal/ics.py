@@ -25,7 +25,7 @@ def _escape(text: str) -> str:
 
 def _uid(event: Event) -> str:
     """Deterministic UID so re-imports update instead of duplicating."""
-    raw = f"{event.course}|{event.label}|{event.title}|{event.date.isoformat()}"
+    raw = f"{event.course}|{event.label}|{event.date.isoformat()}"
     return hashlib.sha1(raw.encode()).hexdigest()[:16] + "@dscal"
 
 
@@ -47,7 +47,11 @@ def _fold(line: str) -> list[str]:
 
 
 def to_ics(events: Iterable[Event]) -> str:
-    """Render events as an ICS calendar of all-day events."""
+    """Render events as an ICS calendar of all-day events.
+
+    Event titles are deliberately bare -- "DSC 80: LAB 1" -- per the
+    calendar spec: simple, scannable, no links.
+    """
     lines: list[str] = [
         "BEGIN:VCALENDAR",
         "VERSION:2.0",
@@ -58,19 +62,16 @@ def to_ics(events: Iterable[Event]) -> str:
     for event in sorted(events):
         start = event.date.strftime("%Y%m%d")
         end = (event.date + timedelta(days=1)).strftime("%Y%m%d")
-        summary = f"{event.course}: {event.label} - {event.title}".strip(" -:")
-        body: list[str] = [
-            "BEGIN:VEVENT",
-            f"UID:{_uid(event)}",
-            f"DTSTART;VALUE=DATE:{start}",
-            f"DTEND;VALUE=DATE:{end}",
-            f"SUMMARY:{_escape(summary)}",
-        ]
-        if event.url:
-            body.append(f"URL:{event.url}")
-            body.append(f"DESCRIPTION:{_escape(event.url)}")
-        body.append("END:VEVENT")
-        lines.extend(body)
+        lines.extend(
+            [
+                "BEGIN:VEVENT",
+                f"UID:{_uid(event)}",
+                f"DTSTART;VALUE=DATE:{start}",
+                f"DTEND;VALUE=DATE:{end}",
+                f"SUMMARY:{_escape(event.summary)}",
+                "END:VEVENT",
+            ]
+        )
     lines.append("END:VCALENDAR")
     folded: list[str] = []
     for line in lines:

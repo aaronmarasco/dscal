@@ -9,9 +9,7 @@ def make_event() -> Event:
         date=date(2026, 4, 17),
         course="DSC 80",
         label="PROJ 1",
-        title="Project 1; with, special chars",
         kind=Kind.PROJECT,
-        url="https://example.com/proj1",
     )
 
 
@@ -28,15 +26,11 @@ def test_all_day_event() -> None:
     assert "DTEND;VALUE=DATE:20260418" in text
 
 
-def test_summary_escaped() -> None:
+def test_summary_is_bare_label() -> None:
     text = to_ics([make_event()])
-    assert (
-        "DSC 80: PROJ 1 \\u2013 Project 1\\; with\\, special chars".replace(
-            "\\u2013", "-"
-        )
-        in text
-        or "Project 1\\; with\\, special chars" in text
-    )
+    assert "SUMMARY:DSC 80: PROJ 1" in text
+    assert "URL:" not in text
+    assert "DESCRIPTION:" not in text
 
 
 def test_deterministic_uid() -> None:

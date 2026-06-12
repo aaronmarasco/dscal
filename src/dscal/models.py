@@ -2,29 +2,23 @@
 
 from __future__ import annotations
 
+import re
 from dataclasses import dataclass
 from datetime import date, timedelta
 from enum import Enum
 
 
 class Kind(Enum):
-    """What sort of schedule entry an event is."""
+    """What sort of schedule entry an event is (used for display)."""
 
     LECTURE = "lecture"
     DISCUSSION = "discussion"
     LAB = "lab"
     PROJECT = "project"
     HOMEWORK = "homework"
+    QUIZ = "quiz"
     EXAM = "exam"
     OTHER = "other"
-
-    @property
-    def is_deadline(self) -> bool:
-        """True if this kind of event represents work due (or an exam)."""
-        return self in _DEADLINE_KINDS
-
-
-_DEADLINE_KINDS = frozenset({Kind.LAB, Kind.PROJECT, Kind.HOMEWORK, Kind.EXAM})
 
 
 @dataclass(frozen=True, order=True)
@@ -33,10 +27,30 @@ class Event:
 
     date: date
     course: str  # e.g. "DSC 80"
-    label: str  # e.g. "PROJ 1"
-    title: str  # e.g. "Project 1 checkpoint"
+    label: str  # normalized, e.g. "LAB 1", "FINAL PROJ", "EXAM"
     kind: Kind = Kind.OTHER
-    url: str | None = None
+
+    @property
+    def summary(self) -> str:
+        """Calendar title: course + bare label, nothing else."""
+        return f"{self.course}: {self.label}"
+
+
+# The deliverables worth putting on a calendar. Anything else on a course
+# schedule (LEC, DISC, REV, BONUS, SUR, PRAC, "QUIZ 1 SOLUTIONS", ...)
+# fails this pattern.
+_DEADLINE_RE = re.compile(r"^(FINAL PROJ|LAB|HW|QUIZ|PROJ|EXAM)( \d+)?$")
+
+
+def normalize_label(raw: str) -> str:
+    """Uppercase, collapse whitespace, split glued digits: "HW1" -> "HW 1"."""
+    label = " ".join(raw.upper().split())
+    return re.sub(r"(?<=[A-Z])(?=\d)", " ", label)
+
+
+def is_deadline(label: str) -> bool:
+    """True if a normalized label is a deliverable (lab/hw/quiz/proj/exam)."""
+    return _DEADLINE_RE.match(label) is not None
 
 
 def events_in_window(events: list[Event], start: date, days: int = 7) -> list[Event]:

@@ -11,7 +11,7 @@ from rich.console import Console
 from rich.table import Table
 
 from dscal import config, fetch
-from dscal.models import Event, Kind, events_in_window
+from dscal.models import Event, Kind, events_in_window, is_deadline
 from dscal.parser import ParseError, parse_events
 
 console = Console()
@@ -21,6 +21,7 @@ KIND_STYLES = {
     Kind.PROJECT: "bold magenta",
     Kind.LAB: "bold yellow",
     Kind.HOMEWORK: "bold yellow",
+    Kind.QUIZ: "bold yellow",
     Kind.DISCUSSION: "cyan",
     Kind.LECTURE: "dim",
     Kind.OTHER: "white",
@@ -89,7 +90,7 @@ def cmd_list(args: argparse.Namespace) -> None:
 def cmd_week(args: argparse.Namespace) -> None:
     events = _collect(args.refresh)
     if not args.all:
-        events = [e for e in events if e.kind.is_deadline]
+        events = [e for e in events if is_deadline(e.label)]
     today = date.today()
     window = events_in_window(events, start=today, days=args.days)
     if not window:
@@ -103,8 +104,6 @@ def cmd_week(args: argparse.Namespace) -> None:
     table.add_column("When")
     table.add_column("Course")
     table.add_column("What")
-    table.add_column("Title")
-    table.add_column("Link", overflow="fold")
     for e in window:
         delta = (e.date - today).days
         when = {0: "TODAY", 1: "tomorrow"}.get(delta, e.date.strftime("%a %b %d"))
@@ -113,8 +112,6 @@ def cmd_week(args: argparse.Namespace) -> None:
             f"[{style}]{when}[/]" if style else when,
             e.course,
             f"[{KIND_STYLES.get(e.kind, '')}]{e.label}[/]",
-            e.title,
-            e.url or "",
         )
     console.print(table)
 
@@ -124,7 +121,7 @@ def cmd_export(args: argparse.Namespace) -> None:
 
     events = _collect(args.refresh)
     if not args.all:
-        events = [e for e in events if e.kind.is_deadline]
+        events = [e for e in events if is_deadline(e.label)]
     if not events:
         console.print("[yellow]No events to export.[/]")
         sys.exit(1)
