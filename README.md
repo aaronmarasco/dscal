@@ -20,11 +20,15 @@ Or run it without adding it to a project:
 uvx --from "git+https://github.com/aaronmarasco/dscal.git" dscal --help
 ```
 
-Register the course websites you're taking:
+Register the course websites you're taking. Vanity domains and
+dsc-courses.github.io addresses both work -- these four (Spring 2026)
+are all verified live:
 
 ```
 dscal add "DSC 80" https://dsc80.com
-dscal add "DSC 106" https://dsc-courses.github.io/dsc106-2026-sp
+dscal add "DSC 106" https://dsc106.com
+dscal add "DSC 10" https://dsc10.com
+dscal add "DSC 152" https://dsc152.com
 dscal list
 ```
 
