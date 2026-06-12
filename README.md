@@ -22,8 +22,8 @@ See what's due in the next 7 days, across all your courses:
 dscal week
 ```
 
-This prints a table of upcoming labs, projects, homeworks, and exams,
-sorted by date, with links to each assignment. Use `--days 14` for a
+This prints a table of upcoming deliverables -- labs, homeworks,
+quizzes, projects, and exams -- sorted by date. Use `--days 14` for a
 longer horizon, `--all` to include lectures and discussions, and
 `--refresh` to bypass the one-hour page cache.
 
@@ -34,15 +34,18 @@ dscal export --out my-quarter.ics
 ```
 
 Then import the file at calendar.google.com -> Settings -> Import &
-export. Events get deterministic IDs, so re-importing after a schedule
-change updates events instead of duplicating them.
+export. Event titles are deliberately simple ("DSC 80: LAB 1") and
+events get deterministic IDs, so re-importing after a schedule change
+updates events instead of duplicating them.
 
 How it works: most DSC course sites use the same Jekyll template
 (just-the-class), which dscal parses precisely -- including reading each
 site's quarter (e.g. "Spring 2026") off the page to resolve dates like
-"Tue Apr 14" that have no year. Other sites go through a heuristic
-parser that looks for dates near assignment keywords. Sites that can't
-be parsed are reported, never silently dropped. If you want to try the
+"Tue Apr 14" that have no year. Only deliverables make the calendar
+(LAB, HW, QUIZ, PROJ, FINAL PROJ, EXAM); lectures, discussions, surveys,
+and solutions/practice rows are filtered out, and duplicate rows collapse
+to one event. Sites not using the template go through a heuristic parser;
+sites that can't be parsed are reported, never silently dropped. If you want to try the
 tool without live course sites, `dscal add` also accepts a local HTML
 file in place of a URL (there's a sample page in `tests/fixtures/`).
 
